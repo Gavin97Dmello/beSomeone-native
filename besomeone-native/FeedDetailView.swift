@@ -12,8 +12,6 @@ import Pages
 
 struct FeedDetailView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-    @EnvironmentObject var settings: UserSettings
-
 
     @Binding var feedDetails: Feed
     @State var index = 0
@@ -21,7 +19,7 @@ struct FeedDetailView: View {
     @State var isInProgress = false
     @State var isDone = false
     @State var canGuide = false
-    
+    @Binding var statusBar: Bool
     @State var skillMarked1: [SkillsMarked] = []
     @State var skillMarked2: [SkillsMarked] = []
     @State var didSeeMore: Bool = false
@@ -196,11 +194,11 @@ struct FeedDetailView: View {
                     Text("Share").modifier(BoldText())
                 }.buttonStyle(BorderlessButtonStyle()).foregroundColor(Color.black)
             }.padding(.top, 5.0).padding(.horizontal, 12)
-
-
+           
+            
             Divider()
-
-
+            
+            
             VStack(alignment: .leading) {
                 VStack(alignment: .leading) {
                     Text("Subjects").modifier(BoldText()).padding(.bottom, 5)
@@ -212,10 +210,10 @@ struct FeedDetailView: View {
                 }.padding(.top, 25)
                 if(self.feedDetails.link_details.count > 0) {
                     VStack(alignment: .leading) {
-                        self.getLinks()
-                    }.padding(.top, 25)
+                                       self.getLinks()
+                                   }.padding(.top, 25)
                 }
-
+               
                 HStack {
 
                     Text("Helps you develop").modifier(BoldText())
@@ -230,12 +228,10 @@ struct FeedDetailView: View {
                 VStack(alignment: .leading, spacing: 5) {
                     if(self.feedDetails.skills_marked.count > 0) {
                         ForEach(self.skillMarked1) { skill1 in
-                            return Text("\(skill1.title)(\(skill1.marked))").modifier(RegularLinkText())
+                             Text("\(skill1.title)(\(skill1.marked))").modifier(RegularLinkText())
                         }
                         if(self.didSeeMore == true) {
-                            ForEach(self.skillMarked2) { skill2 in
-                                return Text("\(skill2.title)(\(skill2.marked))").modifier(RegularLinkText())
-                            }
+
                         }
                         if(self.feedDetails.skills_marked.count > 10) {
                             Button(action: {
@@ -285,23 +281,21 @@ struct FeedDetailView: View {
 
             }.padding(.all, 15).background(Color(red: 229 / 255, green: 229 / 255, blue: 229 / 255)).frame(minWidth: 0,
                 maxWidth: .infinity,
-                alignment: .topLeading
-            )
+                alignment: .topLeading)
 
 
 
-
-        }.padding(.bottom, 0).border(Color.red)
+        }
             .frame(alignment: .topLeading)
             .edgesIgnoringSafeArea(.all)
             .navigationBarBackButtonHidden(true)
             .navigationBarTitle("")
             .navigationBarHidden(true)
             .onDisappear() {
-                self.settings.hideStatusBar = false
+                self.statusBar = false
             }
             .onAppear() {
-                self.settings.hideStatusBar = true
+                self.statusBar = true
                 self.getMarkedSkills()
         }
 
@@ -325,7 +319,8 @@ struct FeedDetailView_Previews: PreviewProvider {
                 subjects_details: [SubjectImages(attachment_details: AttachmentDetails(path: ""), title: "")],
                 link_details: [LinkDetails(url: "")],
                 skills_marked: [SkillsMarked(id: "", title: "", marked: 0)]
-                ))
+                )),
+            statusBar: Binding.constant(false)
         )
     }
 }

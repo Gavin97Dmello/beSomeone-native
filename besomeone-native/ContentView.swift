@@ -8,8 +8,6 @@
 
 import SwiftUI
 
-
-
 struct BoldTitle: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -24,6 +22,7 @@ struct RegularTitle: ViewModifier {
             .font(.custom("SFProText-Regular", size: 16))
             .foregroundColor(Color.black)
             .multilineTextAlignment(.leading)
+
     }
 }
 struct BoldText: ViewModifier {
@@ -31,7 +30,8 @@ struct BoldText: ViewModifier {
         content
             .font(.custom("SFProText-Semibold", size: 13))
             .foregroundColor(Color.black)
-            .multilineTextAlignment(.leading)
+            .multilineTextAlignment(.leading) .fixedSize(horizontal: false, vertical: true)
+
     }
 }
 struct RegularText: ViewModifier {
@@ -39,7 +39,8 @@ struct RegularText: ViewModifier {
         content
             .font(.custom("SFProText-Regular", size: 13))
             .foregroundColor(Color.black)
-            .multilineTextAlignment(.leading)
+            .multilineTextAlignment(.leading) .fixedSize(horizontal: false, vertical: true)
+
     }
 }
 struct RegularLinkText: ViewModifier {
@@ -47,7 +48,8 @@ struct RegularLinkText: ViewModifier {
         content
             .font(.custom("SFProText-Regular", size: 13))
             .foregroundColor(Color.blue)
-            .multilineTextAlignment(.leading)
+            .multilineTextAlignment(.leading) .fixedSize(horizontal: false, vertical: true)
+
     }
 }
 struct FadedBoldText: ViewModifier {
@@ -55,7 +57,8 @@ struct FadedBoldText: ViewModifier {
         content
             .font(.custom("SFProText-Semibold", size: 13))
             .foregroundColor(Color(red: 151 / 255, green: 151 / 255, blue: 151 / 255, opacity: 1.0))
-            .multilineTextAlignment(.leading)
+            .multilineTextAlignment(.leading) .fixedSize(horizontal: false, vertical: true)
+
     }
 }
 struct FadedRegularText: ViewModifier {
@@ -63,7 +66,8 @@ struct FadedRegularText: ViewModifier {
         content
             .font(.custom("SFProText-Regular", size: 13))
             .foregroundColor(Color(red: 151 / 255, green: 151 / 255, blue: 151 / 255, opacity: 1.0))
-            .multilineTextAlignment(.leading)
+            .multilineTextAlignment(.leading) .fixedSize(horizontal: false, vertical: true)
+
     }
 }
 
@@ -72,7 +76,8 @@ struct RegularSubText: ViewModifier {
         content
             .font(.custom("SFProText-Regular", size: 10))
             .foregroundColor(Color.black)
-            .multilineTextAlignment(.leading)
+            .multilineTextAlignment(.leading) .fixedSize(horizontal: false, vertical: true)
+
     }
 }
 
@@ -81,21 +86,17 @@ struct FadedBoldSubText: ViewModifier {
         content
             .font(.custom("SFProText-Semibold", size: 10))
             .foregroundColor(Color(red: 151 / 255, green: 151 / 255, blue: 151 / 255, opacity: 1.0))
-            .multilineTextAlignment(.leading)
+            .multilineTextAlignment(.leading) .fixedSize(horizontal: false, vertical: true)
+
     }
 }
 
 
 
 struct ContentView: View {
-    
-    @EnvironmentObject var settings: UserSettings
-
 
     var body: some View {
-        NavigationView {
-            Feeds()
-        }.statusBar(hidden: settings.hideStatusBar)
+        Feeds()
     }
 
 }

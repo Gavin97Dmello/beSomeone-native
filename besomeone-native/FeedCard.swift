@@ -9,6 +9,7 @@ struct FeedCard: View {
     @State var feedCardData: Feed
     @State var index = 0
     @State var currentPage = 0
+    @Binding var hideStatusBar: Bool
 
     func getDescription() -> ActiveLabel {
         let label = ActiveLabel()
@@ -84,7 +85,7 @@ struct FeedCard: View {
 
                             Text("See more").modifier(FadedBoldSubText())
                             NavigationLink(destination:
-                                    FeedDetailView(feedDetails: self.$feedCardData )) {
+                                    FeedDetailView(feedDetails: self.$feedCardData, statusBar: $hideStatusBar)) {
                                 EmptyView()
                             }.frame(width: 0, height: 0)
                                 .hidden()
@@ -152,7 +153,8 @@ struct FeedCard_Previews: PreviewProvider {
     static var previews: some View {
         FeedCard(
             feedCardData: Feed(
-                id: "", title: "", description: "", interested_count: 0, comments_count: 0, share_count: 0, interested_count_from_school: 0, is_interested: false, images_details: [ImageDetails(path: "")], subjects_details: [SubjectImages(attachment_details: AttachmentDetails(path: ""), title: "")], link_details: [LinkDetails(url: "")], skills_marked: [SkillsMarked(id: "", title: "", marked: 0)])
+                id: "", title: "", description: "", interested_count: 0, comments_count: 0, share_count: 0, interested_count_from_school: 0, is_interested: false, images_details: [ImageDetails(path: "")], subjects_details: [SubjectImages(attachment_details: AttachmentDetails(path: ""), title: "")], link_details: [LinkDetails(url: "")], skills_marked: [SkillsMarked(id: "", title: "", marked: 0)]),
+            hideStatusBar: Binding.constant(false)
 //            title: Binding.constant("Title"),
 //            description: Binding.constant("Description"),
 //            interested_count: Binding.constant(0),

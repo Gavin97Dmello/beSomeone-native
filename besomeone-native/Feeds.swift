@@ -11,9 +11,10 @@ import SwiftUI
 struct Feeds: View {
     @State private var feeds: [Feed] = []
     @State private var feedsLoaded = false;
-    @EnvironmentObject var settings: UserSettings
+    @State var hideStatusBar = false;
 
     var body: some View {
+        NavigationView {
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
                     Spacer()
@@ -21,10 +22,7 @@ struct Feeds: View {
                         .font(.title)
                         .fontWeight(.semibold)
                         .foregroundColor(Color.white).onAppear {
-//                            UIApplication.setStatusBarStyle(.lightContent)
-//                            var preferredStatusBarStyle: UIStatusBarStyle {
-//                                return .lightContent // .default
-//                            }
+                            UIApplication.setStatusBarStyle(.lightContent)
                             Api().getFeeds { (feeds) in
                                 self.feeds = feeds
                                 self.feedsLoaded = true
@@ -43,7 +41,7 @@ struct Feeds: View {
                         ForEach(feeds.indices, id: \.self) { index in
 
                             FeedCard(
-                                feedCardData: self.feeds[index]
+                                feedCardData: self.feeds[index], hideStatusBar: self.$hideStatusBar
                             ).listRowInsets(EdgeInsets())
                             
                         }
@@ -51,16 +49,16 @@ struct Feeds: View {
                             Spacer()
                             Text("The end").modifier(RegularText())
                             Spacer()
-                        }.padding(.top, 5)
-                        .padding(.bottom,10)
+                        }.padding(.top)
+                        .padding(.bottom,30)
                        
                     }
                     
                 }
-            }
-            .edgesIgnoringSafeArea(.all)
+            }.edgesIgnoringSafeArea(.all)
                 .navigationBarTitle("")
                 .navigationBarHidden(true)
+        }.statusBar(hidden: hideStatusBar)
     }
 }
 
