@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Pages
+import ActiveLabel
 
 
 struct FeedDetailView: View {
@@ -23,6 +24,8 @@ struct FeedDetailView: View {
     @State var skillMarked1: [SkillsMarked] = []
     @State var skillMarked2: [SkillsMarked] = []
     @State var didSeeMore: Bool = false
+
+    var description_new = ActiveLabel();
 
 //    init() {
 //        self.getMarkedSkills();
@@ -74,22 +77,21 @@ struct FeedDetailView: View {
         }
     }
 
-    func getLinks() -> ModifiedContent<Text, RegularLinkText> {
-        var subjectList: String = ""
+    func getLinks() -> MyTextView {
+        var linkList: String = ""
         if(self.feedDetails.link_details.count > 0) {
             for i in 0...self.feedDetails.link_details.count - 1 {
                 if(i == self.feedDetails.link_details.count - 1) {
-                    subjectList += "\(self.feedDetails.link_details[i].url)";
+                    linkList += "\(self.feedDetails.link_details[i].url)";
                 }
                 else {
-                    subjectList += "\(self.feedDetails.link_details[i].url), ";
+                    linkList += "\(self.feedDetails.link_details[i].url), ";
                 }
             }
-
-            return Text(subjectList).modifier(RegularLinkText())
+            return MyTextView(text: linkList)
         }
         else {
-            return Text("").modifier(RegularLinkText())
+            return MyTextView(text: "")
         }
     }
 
@@ -102,7 +104,7 @@ struct FeedDetailView: View {
 
 
         ScrollView {
-            ZStack(alignment: . top) {
+            ZStack(alignment: .top) {
                 if self.feedDetails.images_details.count > 1 {
                     ZStack(alignment: .bottom) {
                         ModelPages(self.feedDetails.images_details, currentPage: self.$index, hasControl: false) { i, image in
@@ -138,7 +140,8 @@ struct FeedDetailView: View {
 
                 }.padding([.top, .trailing], 15)
             }
-            VStack {
+            VStack(alignment: .leading) {
+
                 HStack {
                     Text(self.feedDetails.title).modifier(BoldTitle()).lineLimit(2)
                     Spacer()
@@ -194,26 +197,76 @@ struct FeedDetailView: View {
                     Text("Share").modifier(BoldText())
                 }.buttonStyle(BorderlessButtonStyle()).foregroundColor(Color.black)
             }.padding(.top, 5.0).padding(.horizontal, 12)
-           
-            
+
+
             Divider()
-            
-            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             VStack(alignment: .leading) {
+                HStack {
+                    Spacer()
+                }
+
                 VStack(alignment: .leading) {
+
+
                     Text("Subjects").modifier(BoldText()).padding(.bottom, 5)
+
                     self.getSubjects().modifier(RegularText())
                 }.padding(.top, 5)
+
                 VStack(alignment: .leading) {
+
                     Text("Description").modifier(BoldText()).padding(.bottom, 5)
                     Text(self.feedDetails.description).modifier(RegularText())
                 }.padding(.top, 25)
                 if(self.feedDetails.link_details.count > 0) {
-                    VStack(alignment: .leading) {
-                                       self.getLinks()
-                                   }.padding(.top, 25)
+                    HStack {
+                        self.getLinks()
+                        Spacer()
+                    }.padding(.top, 25)
                 }
-               
+
+
+
+
+
+
+
+
+
+
+
+
+
                 HStack {
 
                     Text("Helps you develop").modifier(BoldText())
@@ -221,17 +274,21 @@ struct FeedDetailView: View {
                     Text("(ranked by user feedback)") .font(.custom("SFProText-Regular", size: 10))
                         .foregroundColor(Color.black)
                         .multilineTextAlignment(.leading)
-
-
-
                 }.padding(.top, 25)
-                VStack(alignment: .leading, spacing: 5) {
+                VStack(alignment: .leading) {
+
                     if(self.feedDetails.skills_marked.count > 0) {
                         ForEach(self.skillMarked1) { skill1 in
-                             Text("\(skill1.title)(\(skill1.marked))").modifier(RegularLinkText())
+                            HStack {
+                                Text("\(skill1.title)(\(skill1.marked))").modifier(RegularLinkText())
+                            }
                         }
                         if(self.didSeeMore == true) {
-
+                            HStack {
+                                ForEach(self.skillMarked2) { skill2 in
+                                    Text("\(skill2.title)(\(skill2.marked))").modifier(RegularLinkText())
+                                }
+                            }
                         }
                         if(self.feedDetails.skills_marked.count > 10) {
                             Button(action: {
@@ -250,11 +307,11 @@ struct FeedDetailView: View {
                 }.padding([.top, .bottom], 5)
 
 
-            }.padding(.all, 15).frame(minWidth: 0,
-                maxWidth: .infinity,
+            }.padding(.all, 15).frame(
                 alignment: .topLeading)
 
             VStack(alignment: .leading) {
+
                 HStack {
                     Text(self.feedDetails.title).modifier(RegularTitle())
                     Spacer()
@@ -262,6 +319,9 @@ struct FeedDetailView: View {
                 self.getSubjects().modifier(RegularSubText())
 
                 VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Spacer()
+                    }
                     Button(action: { self.isInProgress = !self.isInProgress; }) {
                         Image(self.isInProgress == false ? "checkboxEmpty" : "checkboxFilled")
                             .renderingMode(.original).resizable().frame(width: 20.0, height: 20.0)
@@ -279,14 +339,12 @@ struct FeedDetailView: View {
                     }.buttonStyle(BorderlessButtonStyle()).foregroundColor(Color.black).padding(.bottom, 5)
                 }.padding(.top).padding(.bottom, 30)
 
-            }.padding(.all, 15).background(Color(red: 229 / 255, green: 229 / 255, blue: 229 / 255)).frame(minWidth: 0,
-                maxWidth: .infinity,
-                alignment: .topLeading)
+            }.padding(.all, 15).background(Color(red: 229 / 255, green: 229 / 255, blue: 229 / 255))
 
 
 
         }
-            .frame(alignment: .topLeading)
+
             .edgesIgnoringSafeArea(.all)
             .navigationBarBackButtonHidden(true)
             .navigationBarTitle("")
@@ -324,3 +382,40 @@ struct FeedDetailView_Previews: PreviewProvider {
         )
     }
 }
+
+struct MyTextView: UIViewRepresentable {
+
+    var text: String
+
+    func makeUIView(context: Context) -> UILabel {
+        let textLabel = ActiveLabel()
+        textLabel.enabledTypes = [.mention, .hashtag, .url]
+        textLabel.text = self.text
+        textLabel.textColor = UIColor(red: 74 / 255, green: 144 / 255, blue: 226 / 255, alpha: 1)
+        textLabel.font = UIFont(name: "SFProText-Regular", size: 13)
+        textLabel.handleURLTap { url in UIApplication.shared.openURL(url) }
+        textLabel.URLColor = UIColor(red: 74 / 255, green: 144 / 255, blue: 226 / 255, alpha: 1)
+        textLabel.textAlignment = NSTextAlignment.left
+        
+        ////Fix here///
+        return textLabel
+    }
+
+    func updateUIView(_ view: UILabel, context: Context) {
+    }
+}
+
+extension UILabel {
+
+    func sizeToFitHeight() {
+        let maxHeight : CGFloat = CGFloat.greatestFiniteMagnitude
+        let size = CGSize.init(width: self.frame.size.width, height: maxHeight)
+        let rect = self.attributedText?.boundingRect(with: size, options: .usesLineFragmentOrigin, context: nil)
+        var frame = self.frame
+        frame.size.height = (rect?.size.height)!
+        self.frame = frame
+    }
+
+}
+
+
