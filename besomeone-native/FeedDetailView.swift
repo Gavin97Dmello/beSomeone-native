@@ -13,8 +13,8 @@ import ActiveLabel
 
 struct FeedDetailView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-    @EnvironmentObject var userSettings: UserSettings
-    @EnvironmentObject var navigation: NavigationStack
+//    @EnvironmentObject var userSettings: UserSettings
+//    @EnvironmentObject var navigation: NavigationStack
 
 
     @Binding var feedDetails: Feed
@@ -152,8 +152,8 @@ struct FeedDetailView: View {
                 HStack {
                     Spacer()
                     Button(action: {
-                        self.navigation.unwind()
-//                        self.mode.wrappedValue.dismiss()
+//                        self.navigation.unwind()
+                        self.mode.wrappedValue.dismiss()
                     }) {
                         Image("closeButton").renderingMode(.original).resizable()
                             .frame(width: 30.0, height: 30.0).padding(.all, 5)
@@ -371,10 +371,10 @@ struct FeedDetailView: View {
             .navigationBarTitle("")
             .navigationBarHidden(true)
             .onDisappear() {
-                self.userSettings.hideStatusBar = false
+                self.statusBar = false
             }
             .onAppear() {
-                self.userSettings.hideStatusBar = true
+                self.statusBar = true
                 self.getMarkedSkills()
         }
 

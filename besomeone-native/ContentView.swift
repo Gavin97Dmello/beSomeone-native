@@ -96,9 +96,11 @@ struct FadedBoldSubText: ViewModifier {
 struct ContentView: View {
 
     var body: some View {
-        NavigationHost()
-        .environmentObject(NavigationStack(
-            NavigationItem( view: AnyView(Feeds())))).environmentObject(UserSettings())
+//        NavigationHost()
+//        .environmentObject(NavigationStack(
+//            NavigationItem( view: AnyView(
+                Feeds()
+//            )))).environmentObject(UserSettings())
     }
 
 }
@@ -124,7 +126,7 @@ init(_ currentView: NavigationItem ){
           return }
        let last = viewStack.count - 1
        currentView = viewStack[last]
-       viewStack.remove(at: last)
+//       viewStack.remove(at: last)
     }
     func advance(_ view:NavigationItem){
        viewStack.append( currentView)
