@@ -6,6 +6,9 @@ import URLImage
 import ActiveLabel
 
 struct FeedCard: View {
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
+    @EnvironmentObject var navigation: NavigationStack
+
     @State var feedCardData: Feed
     @State var index = 0
     @State var currentPage = 0
@@ -31,11 +34,16 @@ struct FeedCard: View {
 
 
                         ModelPages(self.feedCardData.images_details, currentPage: self.$index, hasControl: false) { i, image in
-//                            NavigationView{
 //                            NavigationLink(destination: FeedDetailView(feedDetails: self.$feedCardData, statusBar: self.$hideStatusBar)) {
-                            ImageView(withURL: image.path)
-//                            }
-//                            }
+
+                                ImageView(withURL: image.path).onTapGesture {
+                                    self.navigation.advance(
+                                        NavigationItem( view: AnyView(FeedDetailView(feedDetails: self.$feedCardData, statusBar: self.$hideStatusBar))))
+                                    }
+                                
+                            
+//                      
+
                         }.aspectRatio(1 / 1, contentMode: .fit).background(Color(red: 239 / 255, green: 239 / 255, blue: 239 / 255))
 
 
@@ -66,7 +74,7 @@ struct FeedCard: View {
 
                         Button(action: {
 
-                            
+
                         }) {
                             Image("moreOptions").resizable()
                                 .frame(width: 15.0, height: 15.0)
@@ -81,17 +89,20 @@ struct FeedCard: View {
                     }
                     HStack {
                         Spacer()
-                        ZStack {
+//                        ZStack {
 
-                            Text("See more").modifier(FadedBoldSubText())
-                            NavigationLink(destination:
-                                    FeedDetailView(feedDetails: self.$feedCardData, statusBar: $hideStatusBar)) {
-                                EmptyView()
-                            }.frame(width: 0, height: 0)
-                                .hidden()
+                            Text("See more").modifier(FadedBoldSubText()).onTapGesture {
+                                self.navigation.advance(
+                                NavigationItem( view: AnyView(FeedDetailView(feedDetails: self.$feedCardData, statusBar: self.$hideStatusBar))))
+                            }
+//                            NavigationLink(destination:
+//                                    FeedDetailView(feedDetails: self.$feedCardData, statusBar: $hideStatusBar)) {
+//                                EmptyView()
+//                            }.frame(width: 0, height: 0)
+//                                .hidden()
 
 
-                        }
+//                        }
 
 
                     }

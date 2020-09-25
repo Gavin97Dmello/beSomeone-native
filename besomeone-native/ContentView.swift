@@ -96,7 +96,9 @@ struct FadedBoldSubText: ViewModifier {
 struct ContentView: View {
 
     var body: some View {
-        Feeds()
+        NavigationHost()
+        .environmentObject(NavigationStack(
+            NavigationItem( view: AnyView(Feeds())))).environmentObject(UserSettings())
     }
 
 }
@@ -105,5 +107,39 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
+}
+
+struct NavigationItem{
+   var view: AnyView
+}
+
+final class NavigationStack: ObservableObject {
+@Published var viewStack: [NavigationItem] = []
+@Published var currentView: NavigationItem
+init(_ currentView: NavigationItem ){
+   self.currentView = currentView
+}
+    func unwind(){
+       if viewStack.count == 0{
+          return }
+       let last = viewStack.count - 1
+       currentView = viewStack[last]
+       viewStack.remove(at: last)
+    }
+    func advance(_ view:NavigationItem){
+       viewStack.append( currentView)
+       currentView = view
+    }
+    
+    
+}
+
+struct NavigationHost: View{
+   @EnvironmentObject var navigation: NavigationStack
+   @EnvironmentObject var userSettings: UserSettings
+   
+   var body: some View {
+      self.navigation.currentView.view
+   }
 }
 

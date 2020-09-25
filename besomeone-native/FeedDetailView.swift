@@ -13,6 +13,9 @@ import ActiveLabel
 
 struct FeedDetailView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
+    @EnvironmentObject var userSettings: UserSettings
+    @EnvironmentObject var navigation: NavigationStack
+
 
     @Binding var feedDetails: Feed
     @State var index = 0
@@ -77,21 +80,39 @@ struct FeedDetailView: View {
         }
     }
 
-    func getLinks() -> MyTextView {
-        var linkList: String = ""
+    func getLinks() -> ModifiedContent<Text, RegularLinkText> {
+        var linkList: Text = Text("")
         if(self.feedDetails.link_details.count > 0) {
             for i in 0...self.feedDetails.link_details.count - 1 {
                 if(i == self.feedDetails.link_details.count - 1) {
-                    linkList += "\(self.feedDetails.link_details[i].url)";
+                    let temp1 = Text(self.feedDetails.link_details[i].url)
+//                    .onTapGesture {
+//                        let url = URL.init(string: self.feedDetails.link_details[i].url)
+//                        guard let link = url, UIApplication.shared.canOpenURL(link) else { return }
+//                        UIApplication.shared.open(link) } ;
+                    linkList = linkList + temp1;
                 }
                 else {
-                    linkList += "\(self.feedDetails.link_details[i].url), ";
+                    let temp2 = Text(self.feedDetails.link_details[i].url)
+//                        .onTapGesture {
+//                                           let url = URL.init(string: self.feedDetails.link_details[i].url)
+//                                           guard let link = url, UIApplication.shared.canOpenURL(link) else { return }
+//                                           UIApplication.shared.open(link) } as! Text;
+                    linkList = linkList + temp2 + Text(", ");
                 }
             }
-            return MyTextView(text: linkList)
+            return linkList.modifier(RegularLinkText())
+//            return MyTextView(text: linkList, passedWidth: width)
         }
+            
+            
+            
+            
+            
+            
         else {
-            return MyTextView(text: "")
+//            return MyTextView(text: "", passedWidth: width)
+            return Text("").modifier(RegularLinkText())
         }
     }
 
@@ -131,7 +152,8 @@ struct FeedDetailView: View {
                 HStack {
                     Spacer()
                     Button(action: {
-                        self.mode.wrappedValue.dismiss()
+                        self.navigation.unwind()
+//                        self.mode.wrappedValue.dismiss()
                     }) {
                         Image("closeButton").renderingMode(.original).resizable()
                             .frame(width: 30.0, height: 30.0).padding(.all, 5)
@@ -251,7 +273,6 @@ struct FeedDetailView: View {
                 if(self.feedDetails.link_details.count > 0) {
                     HStack {
                         self.getLinks()
-                        Spacer()
                     }.padding(.top, 25)
                 }
 
@@ -350,10 +371,10 @@ struct FeedDetailView: View {
             .navigationBarTitle("")
             .navigationBarHidden(true)
             .onDisappear() {
-                self.statusBar = false
+                self.userSettings.hideStatusBar = false
             }
             .onAppear() {
-                self.statusBar = true
+                self.userSettings.hideStatusBar = true
                 self.getMarkedSkills()
         }
 
@@ -386,9 +407,14 @@ struct FeedDetailView_Previews: PreviewProvider {
 struct MyTextView: UIViewRepresentable {
 
     var text: String
+    var passedWidth: CGFloat
 
     func makeUIView(context: Context) -> UILabel {
+        print(passedWidth)
+
         let textLabel = ActiveLabel()
+        textLabel.numberOfLines = 0
+        textLabel.preferredMaxLayoutWidth = passedWidth * 2.5
         textLabel.enabledTypes = [.mention, .hashtag, .url]
         textLabel.text = self.text
         textLabel.textColor = UIColor(red: 74 / 255, green: 144 / 255, blue: 226 / 255, alpha: 1)
@@ -396,7 +422,9 @@ struct MyTextView: UIViewRepresentable {
         textLabel.handleURLTap { url in UIApplication.shared.openURL(url) }
         textLabel.URLColor = UIColor(red: 74 / 255, green: 144 / 255, blue: 226 / 255, alpha: 1)
         textLabel.textAlignment = NSTextAlignment.left
-        
+//        textLabel.sizeToFit()
+
+
         ////Fix here///
         return textLabel
     }
@@ -408,7 +436,7 @@ struct MyTextView: UIViewRepresentable {
 extension UILabel {
 
     func sizeToFitHeight() {
-        let maxHeight : CGFloat = CGFloat.greatestFiniteMagnitude
+        let maxHeight: CGFloat = CGFloat.greatestFiniteMagnitude
         let size = CGSize.init(width: self.frame.size.width, height: maxHeight)
         let rect = self.attributedText?.boundingRect(with: size, options: .usesLineFragmentOrigin, context: nil)
         var frame = self.frame
@@ -419,3 +447,19 @@ extension UILabel {
 }
 
 
+
+class CustomTextView: UIViewController, UITextViewDelegate {
+    @IBOutlet var textView: UITextView!
+    var data: [LinkDetails] = []
+    override func viewDidLoad() {
+        let attributedString = NSMutableAttributedString(string: "Want to learn iOS? You should visit the best source of free iOS tutorials!")
+        attributedString.addAttribute(.link, value: "https://www.hackingwithswift.com", range: NSRange(location: 19, length: 55))
+
+        textView.attributedText = attributedString
+    }
+
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        UIApplication.shared.open(URL)
+        return false
+    }
+}
