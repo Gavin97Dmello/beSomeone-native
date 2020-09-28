@@ -2,8 +2,8 @@
 //  ContentView.swift
 //  besomeone-native
 //
-//  Created by Zaya Developer on 10/09/20.
-//  Copyright © 2020 Zaya Developer. All rights reserved.
+//  Created by Zaya Developer on 10/09/10.
+//  Copyright © 1010 Zaya Developer. All rights reserved.
 //
 
 import SwiftUI
@@ -95,12 +95,29 @@ struct FadedBoldSubText: ViewModifier {
 
 struct ContentView: View {
 
+    @State var bottomTabIndex: Int = 1;
+    @EnvironmentObject var bottomTab: BottomTab
+
+
     var body: some View {
-//        NavigationHost()
-//        .environmentObject(NavigationStack(
-//            NavigationItem( view: AnyView(
-                Feeds()
-//            )))).environmentObject(UserSettings())
+        VStack {
+            if(self.bottomTabIndex == 0) {
+            GeometryReader {
+                geom in
+                
+                Feeds().frame(height:  geom.size.height - 70).padding(.bottom, 0)
+            }.background(Color.red)
+            }
+            if(self.bottomTabIndex == 1) {
+            GeometryReader {
+                geom in
+                
+                Profile().frame(height:  geom.size.height - 70).padding(.bottom, 0)
+            }.background(Color.red)
+            }
+            self.bottomTab.showBottomTab == true ? CustomBottomTab(bottomTabIndex: self.$bottomTabIndex): nil
+
+        }.edgesIgnoringSafeArea(.all)
     }
 
 }
@@ -111,37 +128,93 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct NavigationItem{
-   var view: AnyView
+
+
+
+struct CustomBottomTab: View {
+
+    @Binding var bottomTabIndex: Int
+
+    var body: some View {
+        VStack {
+            Divider()
+
+            HStack(spacing: 0) {
+
+                VStack {
+                    Button(action: {
+                        self.bottomTabIndex = 0
+                    }, label: {
+                            Image("feedIcon").renderingMode(.original).resizable().frame(width: self.bottomTabIndex == 0 ? 50 : 40, height: self.bottomTabIndex == 0 ? 50 : 40).padding(.all, 10)
+                        })
+                }
+                    .frame(minWidth: 0, maxWidth: .infinity)
+
+                VStack {
+                    Button(action: {
+                        self.bottomTabIndex = 1
+                    }, label: {
+                            Image("profileIcon").renderingMode(.original).resizable().frame(width: self.bottomTabIndex == 1 ? 50 : 40, height: self.bottomTabIndex == 1 ? 50 : 40).padding(.all, 10)
+                        })
+                }
+                    .frame(minWidth: 0, maxWidth: .infinity)
+
+                VStack {
+                    Button(action: {
+                        self.bottomTabIndex = 2
+                    }, label: {
+                            Image("notifyIcon").renderingMode(.original).resizable().frame(width: self.bottomTabIndex == 2 ? 50 : 40, height: self.bottomTabIndex == 2 ? 50 : 40).padding(.all, 10)                        })
+                }
+                    .frame(minWidth: 0, maxWidth: .infinity)
+
+            }.padding(.bottom,10)
+                .frame(minWidth: 0, maxWidth: .infinity)
+
+
+
+
+        }
+
+    }
 }
 
-final class NavigationStack: ObservableObject {
-@Published var viewStack: [NavigationItem] = []
-@Published var currentView: NavigationItem
-init(_ currentView: NavigationItem ){
-   self.currentView = currentView
-}
-    func unwind(){
-       if viewStack.count == 0{
-          return }
-       let last = viewStack.count - 1
-       currentView = viewStack[last]
-//       viewStack.remove(at: last)
-    }
-    func advance(_ view:NavigationItem){
-       viewStack.append( currentView)
-       currentView = view
-    }
-    
-    
-}
 
-struct NavigationHost: View{
-   @EnvironmentObject var navigation: NavigationStack
-   @EnvironmentObject var userSettings: UserSettings
-   
-   var body: some View {
-      self.navigation.currentView.view
-   }
-}
+//struct NavigationItem {
+//    var view: AnyView
+//}
+//final class NavigationStack: ObservableObject {
+//    @Published var viewStack: [NavigationItem] = []
+//    @Published var currentView: NavigationItem
+//    init(_ currentView: NavigationItem) {
+//        self.currentView = currentView
+//    }
+//    func unwind() {
+//        if viewStack.count == 0 {
+//            return }
+//        let last = viewStack.count - 1
+//        currentView = viewStack[last]
+////       viewStack.remove(at: last)
+//    }
+//    func advance(_ view: NavigationItem) {
+//        viewStack.append(currentView)
+//        currentView = view
+//    }
+//
+//
+//}
+//
+//struct NavigationHost: View {
+//    @EnvironmentObject var navigation: NavigationStack
+//    @EnvironmentObject var userSettings: UserSettings
+//    @EnvironmentObject var showBottomTab: BottomTab
+//
+//
+//    var body: some View {
+//        self.navigation.currentView.view
+//    }
+//}
+
+
+
+
 

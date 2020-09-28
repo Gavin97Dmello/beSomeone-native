@@ -2,6 +2,8 @@
 import SwiftUI
 
 class HostingController: UIHostingController<ContentView> {
+    
+    @EnvironmentObject var showBottomTab:BottomTab
       // 1. We change this variable
     private var currentStatusBarStyle: UIStatusBarStyle = .default
       // 2. To change this property of `UIHostingController`

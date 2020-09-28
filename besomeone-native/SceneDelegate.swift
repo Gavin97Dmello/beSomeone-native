@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-             window.rootViewController = HostingController(rootView: contentView)
+            window.rootViewController = UIHostingController(rootView: contentView.environmentObject(BottomTab()))
 //            window.rootViewController = UIHostingController(rootView: contentView.environmentObject(settings) )
             self.window = window
             window.makeKeyAndVisible()
@@ -37,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         }
     }
-    
+
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
@@ -66,7 +66,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-    
+
 
 
 }
@@ -79,17 +79,17 @@ struct SceneDelegate_Previews: PreviewProvider {
 }
 
 extension UIApplication {
-      // 1. Function that we can call via `UIApplication.setStatusBarStyle(...)`
+    // 1. Function that we can call via `UIApplication.setStatusBarStyle(...)`
     class func setStatusBarStyle(_ style: UIStatusBarStyle) {
-          // Get the root view controller, which we've set to be `ContentHostingController`
+        // Get the root view controller, which we've set to be `ContentHostingController`
         if let vc = UIApplication.getKeyWindow()?.rootViewController as? HostingController {
-                 // Call the method we've defined
+            // Call the method we've defined
             vc.changeStatusBarStyle(style)
         }
     }
-      // 2. Helper function to get the key window
+    // 2. Helper function to get the key window
     private class func getKeyWindow() -> UIWindow? {
-        return UIApplication.shared.windows.first{ $0.isKeyWindow }
+        return UIApplication.shared.windows.first { $0.isKeyWindow }
     }
 }
 

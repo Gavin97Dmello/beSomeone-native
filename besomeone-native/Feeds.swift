@@ -9,12 +9,15 @@
 import SwiftUI
 
 struct Feeds: View {
+    @EnvironmentObject var bottomTab: BottomTab
+
     @State private var feeds: [Feed] = []
     @State private var feedsLoaded = false;
     @State var hideStatusBar = false;
 
     var body: some View {
         NavigationView {
+
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
                     Spacer()
@@ -38,26 +41,28 @@ struct Feeds: View {
                 }
                 if self.feedsLoaded == true {
                     List {
-                        ForEach(feeds.indices, id: \.self) { index in
+                        ForEach(self.feeds.indices, id: \.self) { index in
 
                             FeedCard(
                                 feedCardData: self.feeds[index], hideStatusBar: self.$hideStatusBar
                             ).listRowInsets(EdgeInsets())
-                            
+
                         }
                         HStack {
                             Spacer()
                             Text("The end").modifier(RegularText())
                             Spacer()
                         }.padding(.top)
-                        .padding(.bottom,30)
-                       
+                            .padding(.bottom, 30)
+
                     }
-                    
+
                 }
-            }.edgesIgnoringSafeArea(.all)
+            }
                 .navigationBarTitle("")
                 .navigationBarHidden(true)
+             
+
         }.statusBar(hidden: hideStatusBar)
     }
 }

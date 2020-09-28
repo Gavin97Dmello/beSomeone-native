@@ -28,7 +28,6 @@ struct FeedCard: View {
     var body: some View {
         VStack {
             VStack {
-                ZStack {
 
 
                     VStack {
@@ -82,7 +81,11 @@ struct FeedCard: View {
                         }
                         HStack {
                             Spacer()
-                            Text("See more").modifier(FadedBoldSubText())
+                            NavigationLink(destination:
+                                    FeedDetailView(feedDetails: self.$feedCardData, statusBar: $hideStatusBar)) {
+                                        Text("See more").modifier(FadedBoldText())
+                            }.frame(width: 80)
+                            
                         }
                         HStack {
                             HStack {
@@ -107,12 +110,8 @@ struct FeedCard: View {
                             }
                         }
                     }
-                    NavigationLink(destination:
-                            FeedDetailView(feedDetails: self.$feedCardData, statusBar: $hideStatusBar)) {
-                        EmptyView()
-                    }.frame(width: 0, height: 0)
-                        .hidden()
-                }
+                    
+                
                 Divider()
                 HStack {
                     Button(action: { self.feedCardData.is_interested = !self.feedCardData.is_interested; }) {

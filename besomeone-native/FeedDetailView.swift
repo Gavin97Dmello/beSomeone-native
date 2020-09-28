@@ -15,7 +15,7 @@ struct FeedDetailView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 //    @EnvironmentObject var userSettings: UserSettings
 //    @EnvironmentObject var navigation: NavigationStack
-
+    @EnvironmentObject var bottomTab: BottomTab
 
     @Binding var feedDetails: Feed
     @State var index = 0
@@ -104,12 +104,12 @@ struct FeedDetailView: View {
             return linkList.modifier(RegularLinkText())
 //            return MyTextView(text: linkList, passedWidth: width)
         }
-            
-            
-            
-            
-            
-            
+
+
+
+
+
+
         else {
 //            return MyTextView(text: "", passedWidth: width)
             return Text("").modifier(RegularLinkText())
@@ -305,8 +305,10 @@ struct FeedDetailView: View {
                             }
                         }
                         if(self.didSeeMore == true) {
-                            HStack {
-                                ForEach(self.skillMarked2) { skill2 in
+                            ForEach(self.skillMarked2) { skill2 in
+
+                                
+                                HStack {
                                     Text("\(skill2.title)(\(skill2.marked))").modifier(RegularLinkText())
                                 }
                             }
@@ -371,10 +373,15 @@ struct FeedDetailView: View {
             .navigationBarTitle("")
             .navigationBarHidden(true)
             .onDisappear() {
+                
                 self.statusBar = false
+                self.bottomTab.showBottomTab = true
+
             }
             .onAppear() {
                 self.statusBar = true
+                self.bottomTab.showBottomTab = false
+
                 self.getMarkedSkills()
         }
 
