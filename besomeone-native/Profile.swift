@@ -11,14 +11,13 @@ import SwiftUI
 struct Profile: View {
     @EnvironmentObject var bottomTab: BottomTab
 
-    @State private var feeds: [Feed] = []
-    @State private var feedsLoaded = false;
+    @State private var priorityList: [PriorityList] = []
+    @State private var profileLoaded = false;
     @State var hideStatusBar = false;
     @State var currentTab: Int = 0
 
     var body: some View {
         NavigationView {
-
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
                     Spacer()
@@ -27,66 +26,26 @@ struct Profile: View {
                         .fontWeight(.semibold)
                         .foregroundColor(Color.white).onAppear {
                             UIApplication.setStatusBarStyle(.lightContent)
-                            Api().getFeeds { (feeds) in
-                                self.feeds = feeds
-                                self.feedsLoaded = true
+                            Api().getPriorityList { (priorityListData) in
+                                self.priorityList = priorityListData
+                                self.profileLoaded = true
                             }
                         }.padding(.bottom).padding(.top, UIApplication.shared.windows.filter { $0.isKeyWindow }.first?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0)
                     Spacer()
                 }.background(Color(red: 103 / 255, green: 234 / 255, blue: 164 / 255, opacity: 1.0))
-                if self.feedsLoaded == false {
+                if self.profileLoaded == false {
                     VStack { Spacer()
                         Text("Loading")
                         Spacer() }
                 }
-                if self.feedsLoaded == true {
-                    VStack {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 0) {
-                                VStack(spacing: 0) {
-
-                                    Text("Mindful Self").padding(.all).onTapGesture {
-                                        self.currentTab = 0
-                                    }
-                                    Rectangle().frame(height: 3).foregroundColor(self.currentTab == 0 ? Color.blue : Color.white)
-                                    Divider()
-                                }
-                                VStack(spacing: 0) {
-                                    Text("Mindful Self").padding(.all).onTapGesture {
-                                        self.currentTab = 1
-                                    }
-                                    Rectangle().frame(height: 3).foregroundColor(self.currentTab == 1 ? Color.blue : Color.white)
-                                    Divider()
-                                }
-                                VStack(spacing: 0) {
-                                    Text("Mindful Self").padding(.all).onTapGesture {
-                                        self.currentTab = 2
-                                    }
-                                    Rectangle().frame(height: 2).foregroundColor(self.currentTab == 2 ? Color.blue : Color.white)
-                                    Divider()
-                                }
-                                VStack(spacing: 0) {
-                                    Text("Mindful Self").padding(.all).onTapGesture {
-                                        self.currentTab = 3
-                                    }
-                                    Rectangle().frame(height: 2).foregroundColor(self.currentTab == 3 ? Color.blue : Color.white)
-                                    Divider()
-                                }
-                                VStack(spacing: 0) {
-                                    Text("Mindful Self").padding(.all).onTapGesture {
-                                        self.currentTab = 4
-                                    }
-                                    Rectangle().frame(height: 2).foregroundColor(self.currentTab == 4 ? Color.blue : Color.white)
-                                    Divider()
-                                }
-                            }
-                        }
+                if self.profileLoaded == true {
+                    VStack(spacing: 0) {
+                        TalentTitle(currentTab: self.$currentTab, priorityList: self.$priorityList)
 
 
 
 
-//                        SkillListTab()
-                        Spacer()
+                        SkillDrag(skills: self.$priorityList[currentTab].skills)
                     }
 
                 }
@@ -105,3 +64,55 @@ struct Profile_Previews: PreviewProvider {
         Profile()
     }
 }
+
+
+
+struct TalentTitle: View {
+    @Binding var currentTab: Int
+    @Binding var priorityList: [PriorityList]
+
+
+    func isTrue(order: Int) -> Bool {
+        let orderInternal = order - 1;
+
+        return self.currentTab == orderInternal;
+    }
+
+    var body: some View {
+
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 0) {
+                ForEach(self.priorityList, id: \.id) { data in
+                    VStack(spacing: 0) {
+                        
+                        Button(action: {
+                            let order = data.order - 1;
+                            self.currentTab = order
+                        }, label: {
+                                Text(data.title)
+                                    .font(.custom("SFProText-Regular", size: 13))
+                                    .foregroundColor(self.isTrue(order: data.order) ? Color.blue :  Color(red: 187/255, green:187/255, blue:187/255 ))
+                                    .multilineTextAlignment(.center)
+                                    .fixedSize(horizontal: false, vertical: false)
+                                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 40, maxHeight: 40)
+                                    .padding(.horizontal, 10)
+                                    .padding([.top, .bottom], 5)
+
+                            })
+                            
+
+
+                        Rectangle().frame(height: 3).foregroundColor(self.currentTab == data.order - 1 ? Color.blue : Color.white)
+                        Divider()
+                    }
+
+                }
+
+
+            }
+
+        }
+    }
+
+}
+

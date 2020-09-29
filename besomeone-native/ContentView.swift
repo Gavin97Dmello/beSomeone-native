@@ -52,6 +52,25 @@ struct RegularLinkText: ViewModifier {
 
     }
 }
+
+struct RegularSelectedSkillTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.custom("SFProText-Regular", size: 13))
+            .foregroundColor(Color.blue)
+            .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: false)
+
+    }
+}
+struct RegularUnselectedSkillTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.custom("SFProText-Regular", size: 13))
+            .foregroundColor(Color(red: 187/255, green:187/255, blue:187/255 ))
+            .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: false)
+
+    }
+}
 struct FadedBoldText: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -106,14 +125,14 @@ struct ContentView: View {
                 geom in
                 
                 Feeds().frame(height:  geom.size.height - 70).padding(.bottom, 0)
-            }.background(Color.red)
+            }
             }
             if(self.bottomTabIndex == 1) {
             GeometryReader {
                 geom in
                 
                 Profile().frame(height:  geom.size.height - 70).padding(.bottom, 0)
-            }.background(Color.red)
+            }
             }
             self.bottomTab.showBottomTab == true ? CustomBottomTab(bottomTabIndex: self.$bottomTabIndex): nil
 

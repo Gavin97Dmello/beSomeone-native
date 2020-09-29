@@ -58,13 +58,31 @@ class Api {
         URLSession.shared.dataTask(with: request) { (data, _, _) in
 
             guard let data = data else {return}
-
-          
              let feeds = try! JSONDecoder().decode(FeedResponse.self, from: data)
             DispatchQueue.main.async {
                 completion(feeds.results)
             }
         }.resume()
     }
+    
+    func getPriorityList(completion: @escaping ([PriorityList]) -> ()) {
+            guard let url = URL(string: "https://test.api.talentunbound.zaya.in/api/v1/user-skill-priority/")else {return}
+            var request = URLRequest(url: url)
+            request.addValue("Token c333cbbc045cb20c09f72528869e3cce1ede2917", forHTTPHeaderField: "Authorization")
+    //        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
+            request.httpMethod = "GET"
+            URLSession.shared.dataTask(with: request) { (data, _, _) in
+
+                guard let data = data else {return}
+
+              
+                 let priorityList = try! JSONDecoder().decode([PriorityList].self, from: data)
+                DispatchQueue.main.async {
+                    completion(priorityList)
+                }
+            }.resume()
+        }
 }
+
+
 

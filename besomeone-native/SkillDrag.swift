@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct SkillListTab: View {
+struct SkillDrag: View {
     @Binding var skills: [SkillList]
     @State private var isEditable = false
 
@@ -16,13 +16,13 @@ struct SkillListTab: View {
 
 
         List {
-            ForEach(self.skills, id: \.self) { skillData in
+            ForEach(self.skills, id: \.id) { skillData in
                 HStack {
-                    Image("apple").resizable().frame(width: 20, height: 20).onLongPressGesture {
+                    Image("drag_blue_new").resizable().frame(width: 30, height: 30).onLongPressGesture {
                         withAnimation {
                             self.isEditable = true
                         } }
-                    Text(skillData.name)
+                    Text(skillData.title)
 
                 }
             }
@@ -41,15 +41,11 @@ struct SkillListTab: View {
     }
 }
 
-struct SkillListTab_Previews: PreviewProvider {
+struct SkillDrag_Previews: PreviewProvider {
     static var previews: some View {
-        SkillListTab(skills: Binding.constant([SkillList(id: "", name: "", value: 0)]))
+        SkillDrag(skills: Binding.constant([SkillList(id: "", title: "", description: "", position: 0, all_count: 0)]))
     }
 }
 
 
-struct SkillList: Decodable, Identifiable, Hashable {
-    var id: String
-    var name: String
-    var value: Int
-}
+

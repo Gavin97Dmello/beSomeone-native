@@ -55,3 +55,23 @@ struct AttachmentDetails: Decodable, Identifiable {
     let id = UUID()
     var path: String
 }
+
+
+
+
+struct PriorityList: Decodable, Identifiable {
+    var id: String
+    var title: String
+    var description: String
+    var order: Int
+    var skills: [SkillList]
+}
+
+
+struct SkillList: Decodable, Identifiable {
+    var id: String
+    var title: String
+    var description: String
+    var position: Int
+    var all_count: Int
+}
